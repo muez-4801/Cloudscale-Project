@@ -1,0 +1,75 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install Dependencies
+      run: |
+        cd app
+        npm install
+
+    - name: Build Docker Image Locally
+      run: |
+        docker build -t web-app:latest .
+
+  push-to-acr:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Azure Container Registry Login
+      run: |
+        az acr login --name ${{ secrets.ACR_NAME }}
+
+    - name: Build and Push to ACR
+      run: |
+        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/web-app:${{ github.sha }} .
+        docker tag ${{ secrets.ACR_LOGIN_SERVER }}/web-app:${{ github.sha }} ${{ secrets.ACR_LOGIN_SERVER }}/web-app:latest
+        docker push ${{ secrets.ACR_LOGIN_SERVER }}/web-app:${{ github.sha }}
+        docker push ${{ secrets.ACR_LOGIN_SERVER }}/web-app:latest
+
+  deploy-to-aks:
+    needs: push-to-acr
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Get AKS Credentials
+      run: |
+        az aks get-credentials --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.CLUSTER_NAME }}
+
+    - name: Set Image in Manifest
+      run: |
+        sed -i 's|image: .*|image: ${{ secrets.ACR_LOGIN_SERVER }}/web-app:${{ github.sha }}|g' k8s/deployment.yaml
+
+    - name: Deploy to AKS
+      run: |
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml

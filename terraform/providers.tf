@@ -1,4 +1,3 @@
-# إعداد وتحديد الموفرين (Providers) المطلوبين للمشروع
 terraform {
   required_version = ">= 1.0"
   required_providers {
@@ -9,7 +8,6 @@ terraform {
   }
 }
 
-# تفعيل موفر خدمة Azure
 provider "azurerm" {
   features {}
 }
