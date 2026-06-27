@@ -16,3 +16,4 @@ This repository contains a full CI/CD deployment pipeline for CloudScale contain
 - **Cluster Name**: `aks-cloudscale-ezoismo`
 - **Container Registry**: `acrcloudscaleezoismo.azurecr.io`
 - **Pipeline Provider**: GitHub Actions
+test manual approval
