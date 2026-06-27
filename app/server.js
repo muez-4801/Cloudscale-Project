@@ -82,7 +82,7 @@ app.get('/', (req, res) => {
             <p>Welcome to our successfully automated CI/CD project!</p>
             <p>Deployed with ❤️ by Engineers:</p>
             <ul class="team-list">
-                <li class="team-member">Mohammed</li>
+                <li class="team-member">Mohamed</li>
                 <li class="team-member">Islam</li>
                 <li class="team-member">Muez</li>
             </ul>
