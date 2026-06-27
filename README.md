@@ -10,3 +10,9 @@ This repository contains a full CI/CD deployment pipeline for CloudScale contain
 - `terraform/`: Infrastructure as Code configuration files.
 - `k8s/`: Kubernetes manifest deployment configurations.
 - `app/`: Source code of Node.js app with health endpoints.
+
+## 🚀 AKS Kubernetes Deployment Status
+- **Region**: Sweden Central (`swedencentral`)
+- **Cluster Name**: `aks-cloudscale-ezoismo`
+- **Container Registry**: `acrcloudscaleezoismo.azurecr.io`
+- **Pipeline Provider**: GitHub Actions
