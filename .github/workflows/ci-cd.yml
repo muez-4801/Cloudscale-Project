@@ -23,7 +23,7 @@ jobs:
 
     - name: Build Docker Image Locally
       run: |
-        docker build -t web-app:latest .
+        docker build -t cloudscale-app:latest .
 
   push-to-acr:
     needs: build-and-test
@@ -43,10 +43,10 @@ jobs:
 
     - name: Build and Push to ACR
       run: |
-        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/web-app:${{ github.sha }} .
-        docker tag ${{ secrets.ACR_LOGIN_SERVER }}/web-app:${{ github.sha }} ${{ secrets.ACR_LOGIN_SERVER }}/web-app:latest
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/web-app:${{ github.sha }}
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/web-app:latest
+        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/cloudscale-app:${{ github.sha }} .
+        docker tag ${{ secrets.ACR_LOGIN_SERVER }}/cloudscale-app:${{ github.sha }} ${{ secrets.ACR_LOGIN_SERVER }}/cloudscale-app:latest
+        docker push ${{ secrets.ACR_LOGIN_SERVER }}/cloudscale-app:${{ github.sha }}
+        docker push ${{ secrets.ACR_LOGIN_SERVER }}/cloudscale-app:latest
 
   deploy-to-aks:
     needs: push-to-acr
@@ -67,7 +67,7 @@ jobs:
 
     - name: Set Image in Manifest
       run: |
-        sed -i 's|image: .*|image: ${{ secrets.ACR_LOGIN_SERVER }}/web-app:${{ github.sha }}|g' k8s/deployment.yaml
+        sed -i 's|image: .*|image: ${{ secrets.ACR_LOGIN_SERVER }}/cloudscale-app:${{ github.sha }}|g' k8s/deployment.yaml
 
     - name: Deploy to AKS
       run: |

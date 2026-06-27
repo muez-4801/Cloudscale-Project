@@ -5,5 +5,5 @@ variable "student_names" {
 
 variable "location" {
   type    = string
-  default = "Sweden Central"
+  default = "swedencentral"
 }

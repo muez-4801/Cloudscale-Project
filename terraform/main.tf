@@ -1,7 +1,6 @@
 resource "azurerm_resource_group" "rg" {
   name     = "rg-cloudscale-${var.student_names}"
   location = var.location
-
   tags = {
     Project     = "Final"
     StudentName = "Moaz-Islam-Mohamed"
@@ -13,7 +12,6 @@ resource "azurerm_container_registry" "acr" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "Basic"
-
   tags = {
     Project     = "Final"
     StudentName = "Moaz-Islam-Mohamed"
@@ -29,12 +27,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   default_node_pool {
     name       = "default"
     node_count = 2
-    vm_size    = "Standard_B2s"
+    vm_size    = "Standard_D2s_v3"
   }
 
   identity {
     type = "SystemAssigned"
   }
+
+  oidc_issuer_enabled = true
 
   tags = {
     Project     = "Final"
