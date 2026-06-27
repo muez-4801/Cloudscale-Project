@@ -1,6 +1,6 @@
 variable "student_names" {
   type    = string
-  default = "moazislammohammed"
+  default = "ezoismo"
 }
 
 variable "location" {
