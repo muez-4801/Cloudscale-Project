@@ -1,3 +1,13 @@
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// /health endpoint for Kubernetes probes
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
+// Main Page with styled HTML
 app.get('/', (req, res) => {
     res.send(`
     <!DOCTYPE html>
@@ -69,15 +79,19 @@ app.get('/', (req, res) => {
         <div class="card">
             <h1>CloudScale Project</h1>
             <div class="status-badge">● AKS Cluster Live</div>
-            <p>Welcome to our successfully automated CI/CD graduation project!</p>
+            <p>Welcome to our successfully automated CI/CD project!</p>
             <p>Deployed with ❤️ by Engineers:</p>
             <ul class="team-list">
-                <li class="team-member">Muez</li>
-                <li class="team-member">Islam</li>
                 <li class="team-member">Mohammed</li>
+                <li class="team-member">Islam</li>
+                <li class="team-member">Muez</li>
             </ul>
         </div>
     </body>
     </html>
     `);
+});
+
+app.listen(PORT, () => {
+    console.log('Server is running on port ' + PORT);
 });
